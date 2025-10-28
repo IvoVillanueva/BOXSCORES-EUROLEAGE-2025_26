@@ -31,6 +31,12 @@ boxscores_fn <- function(gamecode) {
     filter(codigo == gamecode) %>%
     pull(jornada)
 
+  fecha <- ronda_df %>%
+    rename(codigo = gamecode) %>%
+    arrange(jornada, codigo) %>%
+    filter(codigo == gamecode) %>%
+    pull(date)
+
   raw_teams <- httr::GET(url, query = list()) %>%
     content()
 
@@ -59,11 +65,12 @@ boxscores_fn <- function(gamecode) {
 
   df2 <- rbind(df, df1) %>%
     select(id_match, Player_ID:opp_team_name) %>%
-    clean_names() %>%
+    janitor::clean_names() %>%
     mutate(
       isLeague = "euroleague",
       player_id = str_squish(player_id),
-      ronda = round, .before = id_match
+      ronda = round, .before = id_match,
+      date = fecha, .before = ronda
     )
 }
 
