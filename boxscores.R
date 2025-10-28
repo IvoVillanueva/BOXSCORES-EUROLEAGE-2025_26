@@ -79,3 +79,5 @@ boxscores_fn <- function(gamecode) {
 }
 
 boxscores_df <- map_df(gamecode, boxscores_fn)
+
+write.csv(boxscores_df, "data/euroleague_boxscore_2025_26.csv")
