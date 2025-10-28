@@ -1,5 +1,5 @@
 
-name: Estraer Boxscore Euroleague
+name: Extraer Boxscore Euroleague
 
 on:
   workflow_dispatch:
