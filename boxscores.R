@@ -14,7 +14,7 @@ gamecode <- read_csv(
   show_col_types = FALSE,
   progress = FALSE
 ) %>%
-  arrange(round, gamecode, date) %>%
+  arrange(jornada, gamecode, date) %>%
   filter(date < today(tzone = "Europe/Madrid")) %>%
   pull(gamecode)
 
