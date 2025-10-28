@@ -70,7 +70,7 @@ boxscores_fn <- function(gamecode) {
       isLeague = "euroleague",
       player_id = str_squish(player_id),
       ronda = round, .before = id_match,
-      date = fecha, .before = ronda
+      date = fecha
     )
 }
 
