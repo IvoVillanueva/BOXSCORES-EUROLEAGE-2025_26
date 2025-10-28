@@ -5,15 +5,18 @@ library(httr)
 library(lubridate)
 library(janitor)
 
+#cargar las jornadas
+ronda_df <- read_csv(
+  "https://raw.githubusercontent.com/IvoVillanueva/Euroleague-boxscores/refs/heads/main/gamecodes/gamecodes_2025-26.csv",
+  show_col_types = FALSE,
+  progress = FALSE
+) 
+
 # asegurar que la carpeta data existe
 if (!dir.exists("data")) dir.create("data")
 
 #extraer los codigos de partidos hasta la fecha
-gamecode <- read_csv(
-  "https://raw.githubusercontent.com/IvoVillanueva/Euroleague-boxscores/refs/heads/main/gamecodes/gamecodes_2025-26.csv",
-  show_col_types = FALSE,
-  progress = FALSE
-) %>%
+gamecode <- ronda_df %>%
   arrange(jornada, gamecode, date) %>%
   filter(date < today(tzone = "Europe/Madrid")) %>%
   pull(gamecode)
@@ -22,9 +25,9 @@ gamecode <- read_csv(
 boxscores_fn <- function(gamecode) {
   url <- paste0("https://live.euroleague.net/api/Boxscore?gamecode=", gamecode, "&seasoncode=E2025")
 
-  round <- ronda_df %>%
+   round <- ronda_df %>%
     rename(codigo = gamecode) %>%
-    arrange(round, codigo) %>%
+    arrange(jornada, codigo) %>%
     filter(codigo == gamecode) %>%
     pull(jornada)
 
