@@ -5,15 +5,15 @@ library(httr)
 library(lubridate)
 library(janitor)
 
+# asegurar que la carpeta data existe
+if (!dir.exists("data")) dir.create("data")
+
 #cargar las jornadas
 ronda_df <- read_csv(
   "https://raw.githubusercontent.com/IvoVillanueva/Euroleague-boxscores/refs/heads/main/gamecodes/gamecodes_2025-26.csv",
   show_col_types = FALSE,
   progress = FALSE
 ) 
-
-# asegurar que la carpeta data existe
-if (!dir.exists("data")) dir.create("data")
 
 #extraer los codigos de partidos hasta la fecha
 gamecode <- ronda_df %>%
@@ -48,7 +48,7 @@ boxscores_fn <- function(gamecode) {
       id_match = gamecode
     )
 
-  df1 <- purrr::pluck(teams_enbruto, "Stats", 2, "PlayersStats") %>%
+  df1 <- purrr::pluck(raw_teams, "Stats", 2, "PlayersStats") %>%
     tibble(value = .) %>%
     unnest_wider(value) %>%
     mutate(
