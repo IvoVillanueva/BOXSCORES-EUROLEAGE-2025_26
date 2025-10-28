@@ -17,7 +17,7 @@ gamecode <- read_csv(
   filter(date < today(tzone = "Europe/Madrid")) %>%
   pull(gamecode)
 
-#función que extrae los boxscore
+#función que extrae los boxscores
 boxscores_fn <- function(gamecode) {
   url <- paste0("https://live.euroleague.net/api/Boxscore?gamecode=", gamecode, "&seasoncode=E2025")
 
@@ -27,17 +27,13 @@ boxscores_fn <- function(gamecode) {
     filter(codigo == gamecode) %>%
     pull(jornada)
 
-
   raw_teams <- httr::GET(url, query = list()) %>%
     httr::content()
-
-
 
   tm <- purrr::pluck(raw_teams, "Stats") %>%
     dplyr::tibble(value = .) %>%
     tidyr::unnest_wider(value) %>%
     select(Team)
-
 
   df <- purrr::pluck(raw_teams, "Stats", 1, "PlayersStats") %>%
     dplyr::tibble(value = .) %>%
@@ -47,7 +43,6 @@ boxscores_fn <- function(gamecode) {
       opp_team_name = tm$Team[2],
       id_match = gamecode
     )
-
 
   df1 <- purrr::pluck(teams_enbruto, "Stats", 2, "PlayersStats") %>%
     dplyr::tibble(value = .) %>%
@@ -70,4 +65,5 @@ boxscores_fn <- function(gamecode) {
 
 boxscores_df <- map_df(gamecode, boxscores_fn)
 
-write.csv(boxscores_df, "data/euroleague_boxscore_2025_26.csv")
+#escribir el dataframe en la carpeta "data/"
+write.csv(boxscores_df, "data/euroleague_boxscore_2025_26.csv", row.names = F)
