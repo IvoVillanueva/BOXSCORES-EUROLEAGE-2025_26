@@ -3,6 +3,7 @@ library(tidyverse)
 library(jsonlite)
 library(httr)
 library(lubridate)
+library(janitor)
 
 # asegurar que la carpeta data existe
 if (!dir.exists("data")) dir.create("data")
@@ -28,16 +29,16 @@ boxscores_fn <- function(gamecode) {
     pull(jornada)
 
   raw_teams <- httr::GET(url, query = list()) %>%
-    httr::content()
+    content()
 
-  tm <- purrr::pluck(raw_teams, "Stats") %>%
-    dplyr::tibble(value = .) %>%
-    tidyr::unnest_wider(value) %>%
+  tm <- pluck(raw_teams, "Stats") %>%
+    tibble(value = .) %>%
+    unnest_wider(value) %>%
     select(Team)
 
-  df <- purrr::pluck(raw_teams, "Stats", 1, "PlayersStats") %>%
-    dplyr::tibble(value = .) %>%
-    tidyr::unnest_wider(value) %>%
+  df <- pluck(raw_teams, "Stats", 1, "PlayersStats") %>%
+    tibble(value = .) %>%
+    unnest_wider(value) %>%
     mutate(
       team_name = tm$Team[1],
       opp_team_name = tm$Team[2],
@@ -45,8 +46,8 @@ boxscores_fn <- function(gamecode) {
     )
 
   df1 <- purrr::pluck(teams_enbruto, "Stats", 2, "PlayersStats") %>%
-    dplyr::tibble(value = .) %>%
-    tidyr::unnest_wider(value) %>%
+    tibble(value = .) %>%
+    unnest_wider(value) %>%
     mutate(
       team_name = tm$Team[2],
       opp_team_name = tm$Team[1],
@@ -55,7 +56,7 @@ boxscores_fn <- function(gamecode) {
 
   df2 <- rbind(df, df1) %>%
     select(id_match, Player_ID:opp_team_name) %>%
-    janitor::clean_names() %>%
+    clean_names() %>%
     mutate(
       isLeague = "euroleague",
       player_id = str_squish(player_id),
