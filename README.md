@@ -27,6 +27,7 @@ Este repositorio ejecuta automáticamente un script en **R** que **extrae y actu
 
 3. **Extracción por partido**  
    Para cada `gamecode`, consulta:
+   https://live.euroleague.net/api/Boxscore?gamecode={GC}&seasoncode=E2025
 y obtiene `PlayersStats` para ambos equipos, añadiendo:
 - `team_name`, `opp_team_name`
 - `id_match` (el código del partido)
@@ -34,8 +35,7 @@ y obtiene `PlayersStats` para ambos equipos, añadiendo:
 - `isLeague = "euroleague"`
 
 4. **Salida final**  
-Combina todo en un único dataframe y lo guarda en:
-data/euroleague_boxscore_2025_26.csv
+Combina todo en un único dataframe y lo guarda en: data/euroleague_boxscore_2025_26.csv
 
 ---
 
