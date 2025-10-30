@@ -38,8 +38,9 @@ jobs:
           
       - name: Run R script
         env:
-        run: Rscript boxscores.R
-        shell: bash
+          JSON_STATS_EUROLEAGUE: ${{ secrets.JSON_STATS_EUROLEAGUE }}
+          run: Rscript boxscores.R
+          shell: bash
 
       - name: Commit changes in data folder
         run: |
