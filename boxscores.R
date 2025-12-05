@@ -24,7 +24,8 @@ gamecode <- ronda_df %>%
 #función que extrae los boxscores
 boxscores_fn <- function(gamecode) {
   url <- paste0("https://live.euroleague.net/api/Boxscore?gamecode=", gamecode, "&seasoncode=E2025")
-
+  
+  
    round <- ronda_df %>%
     rename(codigo = gamecode) %>%
     arrange(jornada, codigo) %>%
@@ -39,12 +40,20 @@ boxscores_fn <- function(gamecode) {
 
   raw_teams <- httr::GET(url, query = list()) %>%
     content()
-
+  
+  # Comprueba si el elemento principal "Stats" existe y tiene al menos 2 equipos (elementos)
+  if (!is.list(raw_teams) || is.null(raw_teams$Stats) || length(raw_teams$Stats) < 2) {
+    message(paste("Saltando gamecode:", gamecode, ". Juego no jugado o sin datos. Devolviendo NULL."))
+    return(NULL) 
+  }
+  
   tm <- pluck(raw_teams, "Stats") %>%
     tibble(value = .) %>%
     unnest_wider(value) %>%
     select(Team)
-
+ 
+ 
+  
   df <- pluck(raw_teams, "Stats", 1, "PlayersStats") %>%
     tibble(value = .) %>%
     unnest_wider(value) %>%
