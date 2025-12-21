@@ -10,7 +10,7 @@ if (!dir.exists("data")) dir.create("data")
 
 #cargar las jornadas
 ronda_df <- read_csv(
-  "https://raw.githubusercontent.com/IvoVillanueva/Euroleague-boxscores/refs/heads/main/gamecodes/gamecodes_2025-26.csv",
+  "https://raw.githubusercontent.com/IvoVillanueva/BOXSCORES-EUROLEAGE-2025_26/refs/heads/main/data/gamecodes_euroleague_2025-26.csv",
   show_col_types = FALSE,
   progress = FALSE
 ) 
