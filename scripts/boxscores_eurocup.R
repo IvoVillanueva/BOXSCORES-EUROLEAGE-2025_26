@@ -24,7 +24,7 @@ gamecode <- ronda_df %>%
 
 #función que extrae los boxscores
 boxscores_fn <- function(gamecode) {
-  url <- paste0("https://live.euroleague.net/api/Boxscore?gamecode=", gamecode, "&seasoncode=E2025")
+  url <- paste0("https://live.euroleague.net/api/Boxscore?gamecode=", gamecode, "&seasoncode=U2025")
   
   
   round <- ronda_df %>%
@@ -77,7 +77,7 @@ boxscores_fn <- function(gamecode) {
     select(id_match, Player_ID:opp_team_name) %>%
     janitor::clean_names() %>%
     mutate(
-      isLeague = "euroleague",
+      isLeague = "eurocup",
       player_id = str_squish(player_id),
       ronda = round, .before = id_match,
       date = fecha
@@ -87,4 +87,4 @@ boxscores_fn <- function(gamecode) {
 boxscores_df <- map_df(gamecode, boxscores_fn)
 
 #escribir el dataframe en la carpeta "data/"
-write.csv(boxscores_df, "data/euroleague_boxscore_2025_26.csv", row.names = F)
+write.csv(boxscores_df, "data/eurocup_boxscore_2025_26.csv", row.names = F)
