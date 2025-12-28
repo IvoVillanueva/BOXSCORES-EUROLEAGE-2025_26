@@ -99,4 +99,4 @@ boxscore <- bind_rows(teamA_box, teamB_box) %>%
     .before = 1
   )
 
-links tiene todos los links de los partidos de la competicion primer paso hacer un bucle o una funcion que cuando fecha sea mayor  que hoy stop (pare)
+
