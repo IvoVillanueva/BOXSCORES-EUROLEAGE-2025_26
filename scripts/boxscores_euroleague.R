@@ -80,7 +80,8 @@ boxscores_fn <- function(gamecode) {
       fecha = fecha,
       semana = lubridate::isoweek(fecha),
       player_id = str_squish(player_id),
-      ronda = round, .before = id_match,
+      ronda = round,
+      .before = id_match,
       
     )
 }
