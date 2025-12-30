@@ -80,9 +80,9 @@ boxscores_fn <- function(gamecode) {
       competicion = "Eurocup",
       fecha = fecha,
       semana = lubridate::isoweek(fecha),
-      .before = 1,
       player_id = str_squish(player_id),
-      ronda = round, .before = id_match,
+      ronda = round,
+      .before = id_match,
     )
 }
 
