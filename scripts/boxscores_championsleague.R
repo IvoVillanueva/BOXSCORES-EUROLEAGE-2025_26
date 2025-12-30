@@ -1,23 +1,31 @@
+# Librerías ---------------------------------------------------------------
 library(tidyverse)
 library(rvest)
 library(jsonlite)
 library(lubridate)
 library(httr)
+# asegurar que la carpeta data existe
+if (!dir.exists("data")) dir.create("data")
+
 
 # cargar los links de los partidos
 
-links <- readr::read_csv("data/gamecodes_fiba_europecup_2025-26.csv",
+
+links <- readr::read_csv(
+  "data/gamecodes_championsleague_2025-26.csv",
   show_col_types = FALSE
 ) %>%
   distinct() %>%
   dplyr::pull(links)
 
+
+# pausas entre requests
 pausa <- 1
 pause_every <- 100
 pause_seconds <- 5
 
 # extraer los boxscores
-boxscores_europe_cup <- list()
+boxscores_championsleague <- list()
 i <- 0
 
 for (link in links) {
@@ -50,14 +58,17 @@ for (link in links) {
           fixed_json <- raw_json_embed %>%
             stringr::str_replace('^self\\.__next_f\\.push\\(\\[\\d+,"', "") %>%
             stringr::str_replace('"\\]\\)$', "") %>%
-            stringr::str_replace_all('(?<![:\\,\\[\\{])"(?![\\:\\,\\}\\]])',
-                                     '\\\\"')
+            stringr::str_replace_all(
+              '(?<![:\\,\\[\\{])"(?![\\:\\,\\}\\]])',
+              '\\\\"'
+            )
 
           out <- jsonlite::fromJSON(fixed_json)
 
           if (is.character(out)) {
             out <- jsonlite::fromJSON(out)
           }
+
           return(out)
         }
       )
@@ -71,8 +82,10 @@ for (link in links) {
           fixed_json <- raw_json_embed %>%
             stringr::str_replace('^self\\.__next_f\\.push\\(\\[\\d+,"', "") %>%
             stringr::str_replace('"\\]\\)$', "") %>%
-            stringr::str_replace_all('(?<![:\\,\\[\\{])"(?![\\:\\,\\}\\]])',
-                                     '\\\\"')
+            stringr::str_replace_all(
+              '(?<![:\\,\\[\\{])"(?![\\:\\,\\}\\]])',
+              '\\\\"'
+            )
 
           out <- jsonlite::fromJSON(fixed_json, simplifyVector = FALSE)
 
@@ -84,18 +97,19 @@ for (link in links) {
       )
 
       check <- pbp_things$game$teamAScore
-      
+
       if (length(check) == 0 || check == 0) {
         message("⏭️ siguiente: partido sin jugar")
         next
       }
       fecha <- as.Date(pbp_things$game$gameDateTime)
-      
+
       if (fecha > Sys.Date()) {
         message("⏹️ Parando: partido futuro detectado (", fecha, ")")
         break
       }
-      
+
+
       short_name_A <- pbp_things$game$teamA$shortName
       short_name_B <- pbp_things$game$teamB$shortName
 
@@ -159,14 +173,16 @@ for (link in links) {
   )
 
   if (!is.null(res)) {
-    boxscores_europe_cup[[length(boxscores_europe_cup) + 1]] <- res
+    boxscores_championsleague[[length(boxscores_championsleague) + 1]] <- res
   }
 
   Sys.sleep(pausa)
   if (i %% pause_every == 0) Sys.sleep(pause_seconds)
 }
-boxscores_europe_cup_df <- bind_rows(boxscores_europe_cup) %>%
+# combinar en un solo dataframe y guardar como csv -------------------------
+boxscores_championsleague_df <- bind_rows(boxscores_championsleague) %>%
   arrange(date, match_id, team)
 
-write.csv(boxscores_europe_cup_df, "data/boxscores_fiba_europecup_2025-26.csv",
-          row.names = FALSE)
+write.csv(boxscores_championsleague_df, "data/boxscores_fiba_championsleague_2025-26.csv",
+  row.names = FALSE
+)

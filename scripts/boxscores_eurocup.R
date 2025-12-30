@@ -76,11 +76,13 @@ boxscores_fn <- function(gamecode) {
   df2 <- rbind(df, df1) %>%
     select(id_match, Player_ID:opp_team_name) %>%
     janitor::clean_names() %>%
-    mutate(
-      isLeague = "eurocup",
+      mutate(
+      competicion = "Eurocup",
+      fecha = fecha,
+      semana = lubridate::isoweek(fecha),
+      .before = 1,
       player_id = str_squish(player_id),
       ronda = round, .before = id_match,
-      date = fecha
     )
 }
 

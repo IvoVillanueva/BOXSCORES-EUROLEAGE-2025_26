@@ -76,10 +76,13 @@ boxscores_fn <- function(gamecode) {
     select(id_match, Player_ID:opp_team_name) %>%
     janitor::clean_names() %>%
     mutate(
-      isLeague = "euroleague",
+      competicion = "Euroleague",
+      fecha = fecha,
+      semana = lubridate::isoweek(fecha),
+      .before = 1,
       player_id = str_squish(player_id),
       ronda = round, .before = id_match,
-      date = fecha
+      
     )
 }
 
