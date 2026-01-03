@@ -14,7 +14,11 @@ ronda_fn <- function(ronda) {
     tidyr::unnest_wider(value) %>%
     tidyr::unnest_wider(round) %>%
     tidyr::unnest_wider(confirmedDate, names_sep = "_") %>%
-    transmute(jornada = round, gamecode = code, date = lubridate::with_tz(lubridate::ymd_hms(date), "Europe/Madrid"))
+    transmute(jornada = round,
+              gamecode = code,
+              date = lubridate::with_tz(lubridate::ymd_hms(date),
+                                        "Europe/Madrid"),
+              semana = lubridate::isoweek(date))
 }
 
 ronda_df <- map_df(1:38, ronda_fn)
@@ -31,7 +35,11 @@ ronda_eu <- function(ronda) {
     tidyr::unnest_wider(value) %>%
     tidyr::unnest_wider(round) %>%
     tidyr::unnest_wider(confirmedDate, names_sep = "_") %>%
-    transmute(jornada = round, gamecode = code, date = lubridate::with_tz(lubridate::ymd_hms(date), "Europe/Madrid"))
+    transmute(jornada = round,
+              gamecode = code,
+              date = lubridate::with_tz(lubridate::ymd_hms(date),
+                                        "Europe/Madrid"),
+              semana = lubridate::isoweek(date))
 }
 
 ronda_eu <- map_df(1:18, ronda_eu)
