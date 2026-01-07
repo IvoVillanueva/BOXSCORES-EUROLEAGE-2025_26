@@ -3,7 +3,11 @@ name: Extraer Boxscore Euroleague
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 2 * * TUE-SAT' 
+    # Lunes a viernes a las 02:00 hora Madrid
+    - cron: '0 1 * * MON-FRI'
+
+    # Viernes a las 23:30 hora Madrid
+    - cron: '30 22 * * FRI'
 
 jobs:
   Get-Boxscore-Euroleague:
