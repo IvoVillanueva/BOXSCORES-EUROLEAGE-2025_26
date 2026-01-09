@@ -18,7 +18,7 @@ ronda_df <- read_csv(
 #extraer los codigos de partidos hasta la fecha
 gamecode <- ronda_df %>%
   arrange(jornada, gamecode, date) %>%
-  filter(date < today(tzone = "Europe/Madrid")) %>%
+  filter(date <= today(tzone = "Europe/Madrid")) %>%
   pull(gamecode)
 
 #función que extrae los boxscores
